@@ -6,17 +6,46 @@ const divError = document.querySelector('#div-error-cep');
 const messageError = document.querySelector('#div-error-cep p');
 divError.style.display = "none";
 
+// CONTAINER DE CONTEÚDO DO CÁLCULO
+const divContent = document.querySelector( '#div-content-calc-cep' );
+divContent.style.display = "none";
+
+// CONTAINER DE SINALIZAÇÃO DE CARREGAMENTO
+const divLoad = document.querySelector( '#onload-search-cep' );
+divLoad.style.display = "none";
+
+/**
+ * FUNÇÃO PARA SETAR URL DE FUNÇÕES
+ * @param { string } url 
+ */
+let urlFunctions = '';
+function set_url_calc( url ){
+    urlFunctions = url;
+
+}
+
+/**
+ * 
+ *  Função de click do botão de calcular CEP
+ * 
+ */
 function calcular_frete_unishop(){    
 
-    //Validação de error
-    console.log( inputCep.value.length )
+    // Recebimento da verificação do CEP
     let returnVerification = verificar_cep( inputCep.value );
 
     if( returnVerification['status_verification'] != 'error' ){
 
+        // CORREÇÕES DE VISIBILIDADE
+        divError.style.display = "none";
+
+        // ENVIO PARA O MÉTODO DE CALCULAR PREÇO
         sending_json( inputCep.value );
 
     }else{
+
+        // Display do error
+
         divError.style.display = "block"
         messageError.innerHTML = returnVerification['error_message'];
 
@@ -24,6 +53,13 @@ function calcular_frete_unishop(){
 
 }
 
+/**
+ * 
+ * Função para realizar todas as validações necessárias do CEP digitado
+ * @param { string } cep 
+ * @returns array
+ * 
+ */
 function verificar_cep( cep ){
 
     if( cep == "" ){
@@ -71,6 +107,13 @@ function verificar_cep( cep ){
 
 }
 
+/**
+ * 
+ * Função para verificar se o objeto está vazio
+ * @param {object} obj 
+ * @returns boolean
+ * 
+ */
 function isEmpty(obj) {
     for(var prop in obj) {
         if(obj.hasOwnProperty(prop))
@@ -80,151 +123,70 @@ function isEmpty(obj) {
     return true;
 }
 
+/**
+ * 
+ * Função para fazer o envio da requisição via Ajax para o sistema
+ * @param {string} cep 
+ * 
+ */
 function sending_json( cep ){
 
-    // Preparação da requisição
-    let consultaSedex = {   
-        "nCdEmpresa":"",
-        "sDsSenha":"",
-        "nCdServico":"04014",
-        "sCepOrigem":"30881560",
-        "sCepDestino": inputCep.value,
-        "nVlPeso":"2",
-        "nCdFormato":"1",
-        "nVlComprimento":"20",
-        "nVlAltura":"15",
-        "nVlLargura":"15",
-        "nVlDiametro":"0",
-        "sCdMaoPropria":"n",
-        "nVlValorDeclarado":"100",
-        "sCdAvisoRecebimento":"n"
-        }
-
-    let consultaPac = {
-        "nCdEmpresa":"",
-        "sDsSenha":"",
-        "nCdServico":"41106",
-        "sCepOrigem":"30881560",
-        "sCepDestino": cep,
-        "nVlPeso":"2",
-        "nCdFormato":"1",
-        "nVlComprimento":"20",
-        "nVlAltura":"15",
-        "nVlLargura":"15",
-        "nVlDiametro":"0",
-        "sCdMaoPropria":"s",
-        "nVlValorDeclarado":"100",
-        "sCdAvisoRecebimento":"s"            
-    }
-    let teste = {
-        "nCdEmpresa":"",
-        "sDsSenha":"",
-        "nCdServico":"41106",
-        "sCepOrigem":"37540000",
-        "sCepDestino":"37540000",
-        "nVlPeso":"1",
-        "nCdFormato":"1",
-        "nVlComprimento":"20",
-        "nVlAltura":"5",
-        "nVlLargura":"15",
-        "nVlDiametro":"0",
-        "sCdMaoPropria":"s",
-        "nVlValorDeclarado":"200",
-        "sCdAvisoRecebimento":"s"
-    }
-
-    //Consulta
-    /*$.ajax({
-        type: "GET",
-        contentType: "application/json; charset=utf-8",
-        url: "http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx/CalcPrecoPrazo",
-        data: teste,
-        dataType: "XML",
-        jsonpCallback: "show_content"
-    })*/
-
-    var request = require('request');
-    var xml2js = require('xml2js');
-
-    var params = {
-        'nCdEmpresa': '',
-        'sDsSenha': '',
-        'sCepOrigem': '74380150',
-        'sCepDestino': '43810040',
-        'nVlPeso': '5',
-        'nCdFormato': '1',
-        'nVlComprimento': '16',
-        'nVlAltura': '5',
-        'nVlLargura': '15',
-        'nVlDiametro': '0',
-        'sCdMaoPropria': 's',
-        'nVlValorDeclarado': '200',
-        'sCdAvisoRecebimento': 'n',
-        'StrRetorno': 'xml',
-        'nCdServico': '40010,41106'
-    };
-     
-    var url = 'http://ws.correios.com.br/calculador/CalcPrecoPrazo.aspx';
-    
-    var options = {
-        'uri': url,
-        'method': 'GET',
-        'qs': params
-    };
-    
-    request(options, function(error, response, body) {
-    
-        if (error) {
-            return console.log('Erro ', error);
-        }
-        var parser = new xml2js.Parser({'async': true, 'attrkey': '@', 'explicitArray': false});
-    
-        parser.parseString(body, function (err, xml) {
-            if (err) {
-                return console.log('Erro ', err);
-            }
-    
-            for (var i = 0; i < xml.Servicos.cServico.length; i++) {
-                var row = xml.Servicos.cServico[i];
-    
-                console.log(JSON.stringify(row, null, 2));
-            };
-        });
-    });
-
-}
-
-function show_content( result ){
-    console.log( result );
-}
-
-    var sendjson = {   
-    "nCdEmpresa":"",
-    "sDsSenha":"",
-    "nCdServico":"41106",
-    "sCepOrigem":"37540000",
-    "sCepDestino":"37540000",
-    "nVlPeso":"1",
-    "nCdFormato":"1",
-    "nVlComprimento":"20",
-    "nVlAltura":"5",
-    "nVlLargura":"15",
-    "nVlDiametro":"0",
-    "sCdMaoPropria":"s",
-    "nVlValorDeclarado":"200",
-    "sCdAvisoRecebimento":"s"
-    }
-
     $.ajax({
-        url: 'http://localhost/wordpress/wp-content/plugins/calculo-frete-unishop/assets/calcular.php',
+        url: urlFunctions,
         type: 'GET',
-        contentType: "application/json; charset=utf-8",
         data: {
-            'json' : sendjson
+            action: 'calcular_cep',
+            'cep_destino' : cep
+        },
+        beforeSend : function(){
+
+            divLoad.style.display = "block";
+
         },success: data => {
-            console.log(data);
-        },error: function( XML ){
+
+            divLoad.style.display = "none";
+
+            if( data != null ){
+
+                let infoServico = JSON.parse( data );
+                
+                let resultPAC = infoServico.PAC.cServico;
+                let resultSEDEX = infoServico.SEDEX.cServico;
+
+                divContent.style.display = "block";
+
+                // TAGS DE PREÇO DOS MÉTODOS
+                const tagPricePAC = document.querySelector( '#price-pac' );
+                const tagPriceSEDEX = document.querySelector( '#price-sedex' );
+
+                // TAGS DE TEMPO DE ENVIO DOS MÉTODOS
+                const tagTimeShippingPAC = document.querySelector( '#time-ship-pac' );
+                const tagTimeShippingSEDEX = document.querySelector( '#time-ship-sedex' );
+
+                /**
+                 * Configuração de exibição da consulta do PAC
+                 */
+                tagPricePAC.innerHTML = 'R$ '+resultPAC.Valor;
+                tagTimeShippingPAC.innerHTML = resultPAC.PrazoEntrega+" a "+( parseInt( resultPAC.PrazoEntrega ) + 2)+" dias";
+
+                /**
+                 * Configuração de exbibição de consulta do SEDEX
+                 */
+                tagPriceSEDEX.innerHTML = 'R$ '+resultSEDEX.Valor;
+                tagTimeShippingSEDEX.innerHTML = resultSEDEX.PrazoEntrega+" a "+( parseInt( resultSEDEX.PrazoEntrega ) + 2)+" dias";
+
+            }else{
+                alert( "Ocorreu um erro ao calcular o seu CEP" );
+            }                                 
+
+            let retorno = new Object();
+            retorno.status_action = 'success';
+            return retorno;
+
+        }, error: function( XML ){
             console.log(XML);
+            alert( "Ops! Ocorreu um erro inesperado ao calcular seu CEP. Por favor, tente novamente mais tarde" );
         }
     })
+}
   

@@ -12,7 +12,7 @@
     font-family: 'Roboto';
 }
 .container-inputs-frete input{
-    width: 35%;
+    width: 50%;
     margin-right: 10px;
     border-radius: 8px;
 }
@@ -20,6 +20,7 @@
     padding: 15px;
     background-color: #edc567;
     border-radius: 8px;
+    color: #fff;
 }
 .container-inputs-frete a:hover{
     box-shadow: 0 0 0.3em #ccc;
@@ -32,4 +33,66 @@
     font-family: 'Mulish';
     padding: 10px;
     margin-top: 5px;
+}
+
+#div-content-calc-cep{
+    font-family: 'Roboto';
+    padding-top: 15px;
+}
+.colum-ship-fields-info{
+    display: flex;
+    flex-direction: row;
+}
+.colum-ship-header-info{
+    display: flex;
+    flex-direction: row;
+    margin: 10px 0px;
+    font-weight: bold;
+    font-size: 1em;
+}
+.colum-ship-header-info div{
+    width: 30%;
+    padding: 0px 15px;
+}
+.colum-ship-fields-info div{
+    width: 33%;
+    padding: 10px 15px;
+    background-color: rgba(204, 204, 204, 0.453);
+}
+
+.colum-ship-fields-info #tag-title-type-ship{    
+    border:solid;
+    border-width: 0px 1px 0px 0px;
+}
+.colum-ship-fields-info #tag-price-shipping{    
+    border:solid;
+    border-width: 0px 1px 0px 0px;
+}
+.colum-ship-fields-info #tag-price-shipping a{
+    font-weight: bold;
+}
+.colum-ship-fields-info #tag-shipping-date{    
+    border:solid;
+    border-width: 0px 1px 0px 0px;
+}
+.colum-ship-fields-info #tag-shipping-date a{
+    font-weight: bold;
+}
+
+#onload-search-cep{
+    background-image: url( 'media/load.gif' );
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 200px;
+}
+
+@media (min-width:320px){
+    .colum-ship-header-info{
+        display: none;
+    }
+    .colum-ship-fields-info div{
+        font-size: 1em;
+    }
+
 }
