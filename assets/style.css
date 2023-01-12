@@ -1,0 +1,35 @@
+@charset "UTF-8";
+
+@import url('https://fonts.googleapis.com/css2?family=Mulish&family=Roboto');
+
+.container-inputs-frete{
+    display: flex;
+    flex-direction: row;
+    font-family: 'Mulish';
+}
+#title-calc-frete{
+    color: #edc567;
+    font-family: 'Roboto';
+}
+.container-inputs-frete input{
+    width: 35%;
+    margin-right: 10px;
+    border-radius: 8px;
+}
+.container-inputs-frete a{
+    padding: 15px;
+    background-color: #edc567;
+    border-radius: 8px;
+}
+.container-inputs-frete a:hover{
+    box-shadow: 0 0 0.3em #ccc;
+    cursor: pointer;
+}
+
+/* Error div */
+#div-error-cep{
+    background-color: rgba(204, 204, 204, 0.453);
+    font-family: 'Mulish';
+    padding: 10px;
+    margin-top: 5px;
+}
